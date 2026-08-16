@@ -44,6 +44,18 @@ _Avoid_: Database Backup, Workspace Export, Secret Escrow
 The pre-cutover disclosure of a recovered backup's reference, successful completion time, recovery start time, and maximum interval of changes that may be absent. It requires the Workspace Owner's acknowledgement and does not claim to identify the missing records when the former database state is unavailable.
 _Avoid_: Change Summary, Data-Loss Guarantee, Restore Test Record
 
+**Installation Identity**:
+The stable identity of one installation lineage across backup restoration and replacement-host recovery. It distinguishes that lineage from another independent installation without representing a Workspace, host machine, or authenticated actor.
+_Avoid_: Workspace ID, Host ID, Owner ID
+
+**Recovery Epoch**:
+A unique boundary opened whenever a restored database becomes active under an existing Installation Identity. It distinguishes evidence and references created after that cutover from records created before restoration or during another recovery, without rewriting retained history.
+_Avoid_: Application Version, Database Schema Version, Restore Test
+
+**Fully Qualified Evidence Identity**:
+The globally unique combination of Installation Identity, Recovery Epoch, and a human-readable evidence reference. The short reference remains convenient within one epoch, while external artifacts and Operations Evidence use the complete identity to remain unambiguous across restoration.
+_Avoid_: Snapshot Reference Alone, Database UUID, Filename
+
 **Product**:
 A distinct value-delivering offering for which a Product Owner maintains Product Goals, Initiatives, a Roadmap, and a Product Backlog.
 _Avoid_: Project, Workspace
@@ -345,7 +357,7 @@ A timestamped, read-only export of a Delivery Schedule showing each user-facing 
 _Avoid_: Live Schedule, Editable Report
 
 **Snapshot Reference**:
-An immutable, human-readable identifier generated sequentially per Product in the form `S-YYYY-NNN`, using the Snapshot creation year in the Workspace Time Zone. It is displayed with Product name and generated timestamp, never reused, and complements rather than exposes the Snapshot's internal UUID.
+A human-readable identifier generated sequentially per Product and Recovery Epoch in the form `S-YYYY-NNN`, using the Snapshot creation year in the Workspace Time Zone. It is never reused within that epoch and is displayed with Product name and generated timestamp, but external evidence pairs it with Installation Identity and Recovery Epoch as a Fully Qualified Evidence Identity because a reference lost during recovery may recur in a later epoch.
 _Avoid_: Filename, Timestamp-only Reference, User-defined Snapshot Name
 
 **Snapshot Supersession**:
@@ -361,7 +373,7 @@ An immutable, system-generated, user-safe comparison previewed before and includ
 _Avoid_: Snapshot Update Note, Raw Field Diff, Internal Audit Diff
 
 **Snapshot Artifact**:
-A self-contained, immutable, static HTML representation captured when a Schedule Snapshot is created, including embedded print styles, render version, and a visible content-integrity fingerprint. It contains no JavaScript, forms, trackers, or externally loaded presentation assets; only confirmed recipient-safe Delivery Evidence may link to a network destination. Later viewing and browser Print to PDF use this stored artifact rather than current application UI or styles so that the published presentation does not change after application upgrades. The authenticated Workspace Owner may upload an artifact for local fingerprint verification without the uploaded file being retained; V1 does not claim sender authenticity or manage digital-signing keys. Browser-generated PDFs display the Snapshot Reference and source HTML fingerprint but remain derivatives that are not guaranteed to reproduce or verify byte-for-byte.
+A self-contained, immutable, static HTML representation captured when a Schedule Snapshot is created, including embedded print styles, render version, Fully Qualified Evidence Identity, and a visible content-integrity fingerprint. It contains no JavaScript, forms, trackers, or externally loaded presentation assets; only confirmed recipient-safe Delivery Evidence may link to a network destination. Later viewing and browser Print to PDF use this stored artifact rather than current application UI or styles so that the published presentation does not change after application upgrades. The authenticated Workspace Owner may upload an artifact for local canonical-content verification without the uploaded file being retained; an intact artifact absent from the recovered database is reported as external evidence not present in recovered history and is never imported as a Snapshot. V1 does not claim sender authenticity or manage digital-signing keys. Browser-generated PDFs display the Fully Qualified Evidence Identity and source HTML fingerprint but remain derivatives that are not guaranteed to reproduce or verify byte-for-byte.
 _Avoid_: Live Schedule Page, Regenerated Report, Stored PDF Binary
 
 **Product Backlog**:

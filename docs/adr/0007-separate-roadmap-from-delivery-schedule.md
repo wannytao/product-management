@@ -6,6 +6,10 @@ Delivery Schedules and immutable Schedule Snapshots will provide print-optimized
 
 Each Schedule Snapshot will retain a self-contained immutable HTML artifact with embedded print styles, a render version, and a content-integrity hash captured at creation. Later viewing and printing will use that stored artifact rather than regenerate it with current application components or CSS; V1 will not add a server-side PDF renderer.
 
+Every Snapshot Artifact will display its Fully Qualified Evidence Identity: Installation Identity, Recovery Epoch, and the human-readable Snapshot Reference. The short `S-YYYY-NNN` sequence is unique only within its Product and Recovery Epoch, preventing an artifact issued in a subsequently lost recovery gap from becoming ambiguous with the same short reference generated in a later epoch.
+
+Artifact verification will recompute the canonical-content hash independently of database presence. When the hash is valid but the Fully Qualified Evidence Identity is absent from the restored database, the result will explicitly state `Intact external artifact — not present in recovered history`; it will not imply that the publication remains in current history. The uploaded file is not retained, imported, converted into a placeholder, or used to reconstruct a Schedule Snapshot because it cannot supply the complete domain and revision context.
+
 The stored artifact will be an inert document: it will contain no JavaScript, forms, trackers, or externally loaded presentation assets. Only Delivery Evidence links explicitly confirmed as recipient-safe may navigate to a network destination.
 
 V1 stakeholder sharing will be file-based only: the authenticated Workspace Owner may download the immutable HTML artifact or print it to PDF and distribute that file through an external channel. The application will not create anonymous or signed public links, external-recipient accounts, recipient tracking, or outbound email delivery.
