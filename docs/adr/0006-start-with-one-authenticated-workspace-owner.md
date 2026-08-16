@@ -22,6 +22,8 @@ Passwords will be salted and hashed with Argon2id. Setup and controlled upgrades
 
 Setup will also generate an installation-specific password pepper stored in protected application configuration outside PostgreSQL, source control, database backups, and Workspace exports. Loss or replacement of the pepper makes the existing password verifier unusable and therefore requires a local CLI password reset that revokes every active session; V1 will not bind the pepper to one Windows machine or depend on an external secrets vault.
 
+Every database restore will revoke all session records before the restored installation accepts requests, even when the original pepper remains available. Replacement-host recovery will generate a new pepper and require the local CLI recovery command to set a new Workspace Owner password; it will not preserve access by escrowing the old pepper with a backup or Recovery Kit.
+
 Authentication will issue a high-entropy opaque session token while retaining session state, expiry, and revocation in PostgreSQL. The token will rotate after login and security-sensitive account changes; V1 will not place session state in signed cookies, use JWT access or refresh tokens, or rely on process memory for authoritative sessions.
 
 Cookie transport has two explicit deployment profiles. Loopback-only HTTP may use a host-only `HttpOnly; SameSite=Strict; Path=/` session cookie without `Secure`; any non-loopback access requires HTTPS through an explicitly configured trusted proxy and a `__Host-` session cookie with `Secure`, `HttpOnly`, `SameSite=Strict`, and `Path=/`. The application will reject non-loopback HTTP and will not trust forwarded transport headers from an unconfigured proxy.

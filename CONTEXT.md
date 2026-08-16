@@ -36,6 +36,14 @@ _Avoid_: Permanent Audit Field, Proxy Chain, Planning History
 A read-only, versioned extract of installation-scoped Administrative Audit Events and Restore Test Records for external operational review. It includes a content checksum that can detect accidental corruption or changes to the exported artifact but does not prove that the installation database was never altered. By default it contains only the permanently retained client network prefix and the remaining permitted source context; the Workspace Owner may include exact client IPs whose Restricted Audit Source Details have not expired only after fresh authentication and an explicit sensitive-data warning, and that choice is itself recorded as an Administrative Audit Event. It remains separate from Workspace portability and cannot be imported as planning history.
 _Avoid_: Workspace Export, Database Backup, Editable Audit Report
 
+**Recovery Kit**:
+The version-specific, off-host package required to reconstruct and validate the application environment for a retained backup without depending on a container registry or a new software build. A Recovery Kit contains no installation secret or private recovery key and remains available while any retained backup identifies it.
+_Avoid_: Database Backup, Workspace Export, Secret Escrow
+
+**Recovery Gap Summary**:
+The pre-cutover disclosure of a recovered backup's reference, successful completion time, recovery start time, and maximum interval of changes that may be absent. It requires the Workspace Owner's acknowledgement and does not claim to identify the missing records when the former database state is unavailable.
+_Avoid_: Change Summary, Data-Loss Guarantee, Restore Test Record
+
 **Product**:
 A distinct value-delivering offering for which a Product Owner maintains Product Goals, Initiatives, a Roadmap, and a Product Backlog.
 _Avoid_: Project, Workspace
